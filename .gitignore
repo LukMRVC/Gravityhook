@@ -1,0 +1,9 @@
+.gradle
+.idea
+.DS_Store
+build
+run
+clean
+build_app
+jbuild
+jbr
