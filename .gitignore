@@ -8,3 +8,4 @@ clean
 build_app
 jbuild
 jbr
+/build/
