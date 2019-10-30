@@ -1,19 +1,13 @@
 package Gravityhook;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Main extends Application {
 
-
-    public Parent root = null;
+    public final int HEIGHT = 700;
+    public final int WIDTH = 400;
 
     public static void main(String[] args) {
         launch(args);
@@ -21,15 +15,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            this.root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load FXML");
-        }
-
-        Scene s = new Scene(root);
+        GameController controller = new GameController();
+        controller = controller.start();
+        Scene s = controller.createScene(HEIGHT, WIDTH);
+        primaryStage.setTitle("Gravityhook");
         primaryStage.setScene(s);
         primaryStage.show();
-
+        primaryStage.setOnCloseRequest(x -> System.exit(0));
     }
 }

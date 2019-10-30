@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Gravityhook.Main"
-            prefHeight="400.0" prefWidth="600.0">
-    <Label>Hello, How is World today?</Label>
-</AnchorPane>
+            fx:controller="Gravityhook.GameController"
+            fx:id="root"
+            prefHeight="700.0" minHeight="600" prefWidth="400.0">
+    <center>
+        <Canvas fx:id="canvas" height="500" width="500" BorderPane.alignment="CENTER" />
+        <VBox fx:id="menuBox" alignment="CENTER">
+            <VBox.margin>
+                <Insets top="50" bottom="50"></Insets>
+            </VBox.margin>
+            <children>
+                <Button onAction="#startGame">
+                    <padding>
+                        <Insets top="5" bottom="5" left="5" right="5"></Insets>
+                    </padding>
+                    Start game
+                </Button>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
