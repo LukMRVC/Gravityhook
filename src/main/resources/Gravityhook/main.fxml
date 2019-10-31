@@ -10,15 +10,15 @@
             fx:id="root"
             prefHeight="700.0" minHeight="600" prefWidth="400.0">
     <center>
-        <Canvas fx:id="canvas" height="500" width="500" BorderPane.alignment="CENTER" />
+        <Canvas fx:id="canvas" height="700" width="400" BorderPane.alignment="CENTER" />
         <VBox fx:id="menuBox" alignment="CENTER">
             <VBox.margin>
-                <Insets top="50" bottom="50"></Insets>
+                <Insets top="50" bottom="50" />
             </VBox.margin>
             <children>
                 <Button onAction="#startGame">
                     <padding>
-                        <Insets top="5" bottom="5" left="5" right="5"></Insets>
+                        <Insets top="5" bottom="5" left="5" right="5" />
                     </padding>
                     Start game
                 </Button>

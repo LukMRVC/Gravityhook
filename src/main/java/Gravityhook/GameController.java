@@ -1,7 +1,10 @@
 package Gravityhook;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
@@ -42,7 +45,8 @@ public class GameController {
     }
 
     public void startGame() {
-        menuBox.setVisible(false);
+        root.getChildren().remove(menuBox);
+        root.getChildren().add(canvas);
         new Gravityhook(canvas).game(this);
     }
 
