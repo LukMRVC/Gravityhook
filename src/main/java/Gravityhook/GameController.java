@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -23,8 +24,13 @@ public class GameController {
     @FXML
     VBox menuBox;
 
+    private Gravityhook game;
+
+    private Scene scene;
+
     public GameController start() {
-        FXMLLoader loader = new FXMLLoader(GameController.class.getResource("main.fxml"));
+        game = null;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
         try {
             loader.load();
         } catch (IOException e) {
@@ -32,7 +38,6 @@ public class GameController {
             System.exit(1);
         }
         GameController c = loader.getController();
-        c.init();
         return c;
     }
 
@@ -40,14 +45,33 @@ public class GameController {
         return new Scene(root, x, y);
     }
 
-    private void init() {
-
-    }
-
     public void startGame() {
         root.getChildren().remove(menuBox);
         root.getChildren().add(canvas);
-        new Gravityhook(canvas).game(this);
+        game = new Gravityhook(canvas);
+        game.game(this);
+        game.setScene(scene);
     }
 
+    public void mousePressed(MouseEvent mouseEvent) {
+        if (game != null) {
+            game.clicked(mouseEvent.getSceneX(), mouseEvent.getSceneY());
+        }
+    }
+
+    public void mouseReleased(MouseEvent mouseEvent) {
+        if (game != null) {
+            game.released();
+        }
+    }
+
+    public void mouseMove(MouseEvent mouseEvent) {
+        if (game != null) {
+            game.moved(mouseEvent.getSceneX(), mouseEvent.getSceneY());
+        }
+    }
+
+    public void setScene(Scene s) {
+        this.scene = s;
+    }
 }
