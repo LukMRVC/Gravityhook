@@ -1,7 +1,10 @@
 package Gravityhook;
 
+import Gravityhook.Abstract.GameObject;
+import Gravityhook.Abstract.MovableObject;
 import Gravityhook.GameObjects.Mine;
 import Gravityhook.GameObjects.Player;
+import Gravityhook.GameObjects.Rope;
 import Gravityhook.Interfaces.Drawable;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -65,17 +68,20 @@ public class Gravityhook {
     private void redraw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.rgb(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+        long milis = System.currentTimeMillis();
+        Routines r = new Routines();
         while(true) {
+            r.sleep(10);
+            milis = System.currentTimeMillis();
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            double diff = (milis - System.currentTimeMillis()) / 10.0;
             for (Drawable d : drawables) {
+                if (d instanceof MovableObject) {
+                    ((MovableObject) d).move(diff);
+                }
                 d.draw(gc);
             }
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+
         }
 
     }
@@ -86,7 +92,8 @@ public class Gravityhook {
             Drawable d = it.next();
             if (d instanceof Mine) {
                 if (((Mine) d).isClicked((int)sceneX, (int)sceneY)) {
-                    ((Mine) d).active = true;
+                    ((Mine) d).setActive(true);
+                    drawables.add(new Rope(player, (Mine) d));
                     break;
                 }
             }
@@ -98,10 +105,18 @@ public class Gravityhook {
         while (it.hasNext()) {
             Drawable d = it.next();
             if (d instanceof Mine) {
-                if (((Mine) d).active) {
-                    ((Mine) d).active = false;
+                if (((Mine) d).isActive()) {
+                    ((Mine) d).setActive(false);
                     break;
                 }
+            }
+        }
+        it = drawables.iterator();
+        while (it.hasNext()) {
+            Drawable d = it.next();
+            if (d instanceof Rope) {
+                it.remove();
+                break;
             }
         }
     }

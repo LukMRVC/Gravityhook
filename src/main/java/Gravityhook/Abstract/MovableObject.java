@@ -10,8 +10,8 @@ public abstract class MovableObject extends GameObject implements Movable {
         super(x, y);
     }
 
-    public void move() {
-        x += xAcc;
-        y += yAcc;
+    public void move(double milis) {
+        x += xAcc * milis;
+        y += yAcc * milis;
     }
 }

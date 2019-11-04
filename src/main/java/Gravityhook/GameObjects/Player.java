@@ -8,6 +8,9 @@ import javafx.scene.paint.Paint;
 
 public class Player extends MovableObject {
 
+    public final double mass = 150;
+
+
     public Player(int x, int y) {
         super(x, y);
     }
@@ -24,4 +27,5 @@ public class Player extends MovableObject {
     public boolean intersects(GameObject go) {
         return false;
     }
+
 }

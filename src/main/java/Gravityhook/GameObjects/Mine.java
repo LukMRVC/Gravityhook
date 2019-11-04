@@ -9,12 +9,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Mine extends MovableObject implements Clickable {
+    public final double mass = 2200;
 
     private Image img;
 
     private Image imgActive;
 
-    public boolean active;
+    private boolean active;
 
     public Mine(int x, int y) {
         super(x, y);
@@ -38,6 +39,18 @@ public class Mine extends MovableObject implements Clickable {
             gc.drawImage(this.img,  x - (img.getWidth() / 2), y - (img.getHeight() / 2));
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+        if (active == false) {
+            this.xAcc = 0;
+            this.yAcc = 0;
+        }
+    }
+
     @Override
     public boolean intersects(GameObject go) {
         return false;
@@ -50,4 +63,5 @@ public class Mine extends MovableObject implements Clickable {
         }
         return false;
     }
+
 }
