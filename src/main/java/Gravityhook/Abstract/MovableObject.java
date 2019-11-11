@@ -13,5 +13,4 @@ public abstract class MovableObject extends GameObject implements Movable {
     }
 
 
-
 }

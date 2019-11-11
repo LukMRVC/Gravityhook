@@ -10,7 +10,6 @@ public class Player extends MovableObject {
 
     public final double mass = 150;
 
-
     public Player(int x, int y) {
         super(x, y);
     }
@@ -30,12 +29,24 @@ public class Player extends MovableObject {
 
     public void setAccOnForce(double force, double angle) {
         this.xAcc += Math.cos(angle) * force * mass;
-        this.yAcc += -Math.sin(angle) * force * mass;
+        this.yAcc += Math.sin(angle) * force * mass;
+    }
+
+    private void fixCoords() {
+        if (x >= 360 || x <= 0) {
+            xAcc = 0;
+            x = 380 - 20;
+        }
+        if (y >= 630 || y <= 0) {
+            yAcc = 0;
+            y = 630;
+        }
     }
 
     public void move(double milis) {
         x += xAcc * milis;
         y += yAcc * milis;
+        fixCoords();
     }
 
 }

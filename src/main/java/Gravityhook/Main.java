@@ -26,5 +26,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
         primaryStage.setOnCloseRequest(x -> System.exit(0));
+
     }
 }
