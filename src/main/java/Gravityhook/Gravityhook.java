@@ -6,6 +6,7 @@ import Gravityhook.GameObjects.Mine;
 import Gravityhook.GameObjects.Player;
 import Gravityhook.GameObjects.Rope;
 import Gravityhook.Interfaces.Drawable;
+import gherkin.lexer.Pl;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
@@ -30,8 +31,13 @@ public class Gravityhook {
 
     private Player player;
 
+    private Physics physics;
+
+    private boolean started;
+
     public Gravityhook(Canvas canvas) {
         this.canvas = canvas;
+        this.started = false;
         this.drawables = new ArrayList<>();
         try {
             this.cursor = new ImageCursor(new Image(getClass().getClassLoader().getResourceAsStream("img/cursor.png")));
@@ -47,11 +53,12 @@ public class Gravityhook {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
+        physics = new Physics();
         this.createMines();
         this.createPlayer();
 
         new Thread(this::redraw).start();
+
     }
 
     private void createPlayer() {
@@ -67,21 +74,23 @@ public class Gravityhook {
 
     private void redraw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.rgb(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+        gc.setFill(Color.GREEN);
         long milis = System.currentTimeMillis();
         Routines r = new Routines();
         while(true) {
             r.sleep(10);
-            milis = System.currentTimeMillis();
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            double diff = (milis - System.currentTimeMillis()) / 10.0;
+            double diff = (System.currentTimeMillis() - milis) / 10.0;
             for (Drawable d : drawables) {
-                if (d instanceof MovableObject) {
-                    ((MovableObject) d).move(diff);
-                }
                 d.draw(gc);
-            }
+                if (d instanceof MovableObject) {
+                    if (d instanceof Player && started)
+                        physics.apply((MovableObject) d);
+                    ((MovableObject) d).move(diff);
 
+                }
+            }
+            milis = System.currentTimeMillis();
         }
 
     }
@@ -93,6 +102,7 @@ public class Gravityhook {
             if (d instanceof Mine) {
                 if (((Mine) d).isClicked((int)sceneX, (int)sceneY)) {
                     ((Mine) d).setActive(true);
+                    started = true;
                     drawables.add(new Rope(player, (Mine) d));
                     break;
                 }
@@ -107,16 +117,10 @@ public class Gravityhook {
             if (d instanceof Mine) {
                 if (((Mine) d).isActive()) {
                     ((Mine) d).setActive(false);
-                    break;
                 }
             }
-        }
-        it = drawables.iterator();
-        while (it.hasNext()) {
-            Drawable d = it.next();
             if (d instanceof Rope) {
                 it.remove();
-                break;
             }
         }
     }

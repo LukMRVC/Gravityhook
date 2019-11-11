@@ -28,4 +28,14 @@ public class Player extends MovableObject {
         return false;
     }
 
+    public void setAccOnForce(double force, double angle) {
+        this.xAcc += Math.cos(angle) * force * mass;
+        this.yAcc += -Math.sin(angle) * force * mass;
+    }
+
+    public void move(double milis) {
+        x += xAcc * milis;
+        y += yAcc * milis;
+    }
+
 }

@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Mine extends MovableObject implements Clickable {
-    public final double mass = 2200;
+    public final double mass = 50;
 
     private Image img;
 
@@ -62,6 +62,16 @@ public class Mine extends MovableObject implements Clickable {
             return true;
         }
         return false;
+    }
+
+    public void setAccOnForce(double force, double angle) {
+        this.xAcc += Math.cos(angle) * force * mass;
+        this.yAcc += Math.sin(angle) * force * mass;
+    }
+
+    public void move(double milis) {
+        x += xAcc * milis;
+        y += yAcc * milis;
     }
 
 }
