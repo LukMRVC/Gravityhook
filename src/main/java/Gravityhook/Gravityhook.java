@@ -59,7 +59,7 @@ public class Gravityhook {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         physics = new Physics();
-        this.createMines();
+        this.createMines(10);
         this.createPlayer();
         this.game = game;
         new Thread(this::redraw).start();
@@ -69,9 +69,31 @@ public class Gravityhook {
         player = new Player((int)canvas.getWidth() / 2, (int)canvas.getHeight() - 70);
     }
 
-    private void createMines() {
-        for (int i = 0; i < 5; ++i) {
-            drawables.add(new Mine(new Random().nextInt(380), canvas.getHeight() / 2 + new Random().nextInt(200)));
+    private void createMines(int count) {
+        for (int i = 0; i < count / 2; ++i) {
+            drawables.add(this.createMine(new Random().nextInt(380), (int) (canvas.getHeight() / 2 + new Random().nextInt(200))));
+        }
+        for (int i = 0; i < count / 2 + 1; ++i) {
+            drawables.add(this.createMine(new Random().nextInt(380), 20 + new Random().nextInt((int) canvas.getHeight() / 2) ));
+        }
+    }
+
+    private Mine createMine() {
+        Mine m = new Mine(new Random().nextInt((int)canvas.getWidth() - 20), -250 + new Random().nextInt(230));
+        return m;
+    }
+
+    private Mine createMine(int x, int y) {
+        Mine m = new Mine(x, y);
+        return m;
+    }
+
+    private void moveCanvasEffect(double rememberedPlayerMovement) {
+        if (player.y <= 300 && player.yAcc < 0) {
+            player.yAcc = 0;
+            if (drawables.size() < 15)
+                drawables.add(createMine());
+            drawables.forEach( (d) ->  { if (d instanceof Mine) ((Mine)d).yAcc = -rememberedPlayerMovement; }  );
         }
     }
 
@@ -80,15 +102,22 @@ public class Gravityhook {
         gc.setFill(Color.GREEN);
         long milis = System.currentTimeMillis();
         Routines r = new Routines();
+        double rememberedPlayerMovement;
+        double diff;
         mainLoop : do {
             r.sleep(10);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            double diff = (System.currentTimeMillis() - milis) / 10.0;
+            diff = (System.currentTimeMillis() - milis) / 10.0;
             if (started)
                 physics.apply(player);
+            rememberedPlayerMovement = player.yAcc;
+            moveCanvasEffect(rememberedPlayerMovement);
             player.move(diff).fixCoords(canvas.getWidth(), canvas.getHeight());
+            player.yAcc = rememberedPlayerMovement;
             player.draw(gc);
-            for (Drawable d : drawables) {
+            Iterator<Drawable> it = drawables.iterator();
+            while (it.hasNext()) {
+                Drawable d = it.next();
                 d.draw(gc);
                 if (d instanceof MovableObject) {
                     ((MovableObject) d).fixCoords(canvas.getWidth(), canvas.getHeight())
@@ -98,6 +127,7 @@ public class Gravityhook {
                     break mainLoop;
                 }
             }
+            drawables.removeIf( (d) -> { if (d instanceof GameObject && ((GameObject) d).y >= canvas.getHeight()) return true; return false; } );
             milis = System.currentTimeMillis();
         } while(player.y + player.getHeight() < canvas.getHeight());
         Platform.runLater(game::endGame);

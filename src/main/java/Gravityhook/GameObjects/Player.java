@@ -45,8 +45,9 @@ public class Player extends MovableObject {
     }
 
     public MovableObject fixCoords(double maxWidth, double maxHeight) {
-        if (x + getWidth() > maxWidth || x  < 0) {
+        if (x + getWidth() > maxWidth || x < 0) {
             xAcc *= -0.75;
+            x += xAcc * 10;
         }
         if (y + getHeight() >= maxHeight)
             yAcc *= -1;

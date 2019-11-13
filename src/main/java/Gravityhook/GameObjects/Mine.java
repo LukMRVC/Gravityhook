@@ -82,10 +82,8 @@ public class Mine extends MovableObject implements Clickable {
 
     @Override
     public Movable fixCoords(double maxWidth, double maxHeight) {
-        if (this.x >= maxWidth || this.x - (getWidth() / 2) <= 0)
+        if (this.x + (getWidth() / 2) >= maxWidth || this.x - (getWidth() / 2) <= 0)
             this.xAcc = 0;
-        if (this.y >= maxHeight || this.y <= 0)
-            this.yAcc = 0;
         return this;
     }
 
