@@ -4,7 +4,6 @@ import Gravityhook.Abstract.GameObject;
 import Gravityhook.Abstract.MovableObject;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class Rope extends GameObject {
     public static final double G = 0.003674;          //Gravitational constant, same for everything
@@ -29,20 +28,19 @@ public class Rope extends GameObject {
     @Override
     public void draw(GraphicsContext gc) {
         double force = this.calcForce(end1, end2);
-        double angle = this.getAngle(end1, end2);
-        end1.setAccOnForce(force, angle);
-        end2.setAccOnForce(force / 4.0, angle);
+        end1.setAccOnForce(force, getAngle(end1, end2));
+        end2.setAccOnForce(force / 4.0, getAngle(end2, end1));
         gc.setStroke(Color.BLUEVIOLET);
         gc.strokeLine(end1.x, end1.y, end2.x, end2.y);
     }
 
     public double calcForce(MovableObject mo1, MovableObject mo2) {
-        return G * (mo1.mass * mo2.mass) / (calcDistance(mo1, mo2) );
+        return G * (mo1.getMass() * mo2.getMass()) / (calcDistance(mo1, mo2) );
     }
 
-    public double getAngle(GameObject go1, GameObject go2) { //go1 = player
-        final double deltaX = go2.x - go1.x;
-        final double deltaY = go2.y - go1.y;
+    public double getAngle(GameObject center, GameObject point) { //center = player
+        final double deltaX = point.x - center.x;
+        final double deltaY = point.y - center.y;
         double angle = Math.atan2( deltaY, deltaX );
         return angle;
     }

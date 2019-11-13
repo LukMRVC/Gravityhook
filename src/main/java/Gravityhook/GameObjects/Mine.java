@@ -6,11 +6,9 @@ import Gravityhook.Interfaces.Clickable;
 import Gravityhook.Interfaces.Movable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class Mine extends MovableObject implements Clickable {
-    public final double mass = 30;
+    public final double mass = 10;
 
     private Image img;
 
@@ -76,8 +74,8 @@ public class Mine extends MovableObject implements Clickable {
     }
 
     public void setAccOnForce(double force, double angle) {
-        this.xAcc += -(Math.cos(angle) * force * mass) / 2.0;
-        this.yAcc += -Math.sin(angle) * force * mass ;
+        this.xAcc += (Math.cos(angle) * force * mass) / 4.5;
+        this.yAcc += (Math.sin(angle) * force * mass);
     }
 
     @Override
@@ -93,6 +91,10 @@ public class Mine extends MovableObject implements Clickable {
         x += xAcc * milis;
         y += yAcc * milis;
         return this;
+    }
+
+    public double getMass() {
+        return this.mass;
     }
 
 }

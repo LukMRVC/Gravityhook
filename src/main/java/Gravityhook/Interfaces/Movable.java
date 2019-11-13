@@ -6,4 +6,6 @@ public interface Movable {
     void setAccOnForce(double force, double angle);
 
     Movable fixCoords(double maxWidth, double maxHeight);
+
+    double getMass();
 }

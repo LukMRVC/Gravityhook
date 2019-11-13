@@ -7,6 +7,6 @@ public class Physics {
     public final double gravity = 0.0099;
 
     public void apply(MovableObject mo) {
-        mo.yAcc += gravity * mo.mass;
+        mo.yAcc += gravity * mo.getMass();
     }
 }

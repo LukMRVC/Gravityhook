@@ -8,7 +8,7 @@ import javafx.scene.paint.Paint;
 
 public class Player extends MovableObject {
 
-    public final double mass = 150;
+    public final double mass = 40;
 
     public Player(int x, int y) {
         super(x, y);
@@ -55,6 +55,10 @@ public class Player extends MovableObject {
         x += xAcc * milis;
         y += yAcc * milis;
         return this;
+    }
+
+    public double getMass() {
+        return this.mass;
     }
 
 }
