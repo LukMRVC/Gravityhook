@@ -8,7 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Mine extends MovableObject implements Clickable {
-    public final double mass = 10;
+    public final double mass = 30;
 
     private Image img;
 
@@ -16,7 +16,7 @@ public class Mine extends MovableObject implements Clickable {
 
     private boolean active;
 
-    public Mine(int x, int y) {
+    public Mine(double x, double y) {
         super(x, y);
         active = false;
         try {
@@ -52,6 +52,8 @@ public class Mine extends MovableObject implements Clickable {
 
     @Override
     public boolean intersects(GameObject go) {
+        if (active && Math.abs((x - img.getWidth() / 2) - go.x) < img.getWidth() && Math.abs((y - img.getHeight() / 2) - go.y) < img.getHeight() )
+            return true;
         return false;
     }
 
@@ -74,8 +76,8 @@ public class Mine extends MovableObject implements Clickable {
     }
 
     public void setAccOnForce(double force, double angle) {
-        this.xAcc += (Math.cos(angle) * force * mass) / 4.5;
-        this.yAcc += (Math.sin(angle) * force * mass);
+        this.xAcc += (Math.cos(angle) * force * mass);
+        this.yAcc += (Math.sin(angle) * force * mass) / 5.0;
     }
 
     @Override

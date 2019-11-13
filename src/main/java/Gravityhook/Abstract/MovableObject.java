@@ -6,7 +6,7 @@ public abstract class MovableObject extends GameObject implements Movable {
     public double xAcc = 0;
     public double yAcc = 0;
 
-    public MovableObject(int x, int y) {
+    public MovableObject(double x, double y) {
         super(x, y);
     }
 

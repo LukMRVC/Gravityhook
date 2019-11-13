@@ -8,9 +8,9 @@ import javafx.scene.paint.Paint;
 
 public class Player extends MovableObject {
 
-    public final double mass = 40;
+    public final double mass = 110;
 
-    public Player(int x, int y) {
+    public Player(double x, double y) {
         super(x, y);
     }
 
@@ -24,6 +24,8 @@ public class Player extends MovableObject {
 
     @Override
     public boolean intersects(GameObject go) {
+        if (Math.abs(go.x - x) < getWidth() && Math.abs(go.y - y) < getHeight() )
+            return true;
         return false;
     }
 
@@ -38,13 +40,13 @@ public class Player extends MovableObject {
     }
 
     public void setAccOnForce(double force, double angle) {
-        this.xAcc += Math.cos(angle) * force * mass;
+         this.xAcc += Math.cos(angle) * force * mass;
         this.yAcc += Math.sin(angle) * force * mass;
     }
 
     public MovableObject fixCoords(double maxWidth, double maxHeight) {
         if (x + getWidth() > maxWidth || x  < 0) {
-            xAcc /= -2;
+            xAcc *= -0.75;
         }
         if (y + getHeight() >= maxHeight)
             yAcc *= -1;

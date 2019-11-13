@@ -6,6 +6,7 @@ import Gravityhook.GameObjects.Mine;
 import Gravityhook.GameObjects.Player;
 import Gravityhook.GameObjects.Rope;
 import Gravityhook.Interfaces.Drawable;
+import Gravityhook.Interfaces.IHitbox;
 import gherkin.lexer.Pl;
 import javafx.application.Platform;
 import javafx.scene.Cursor;
@@ -15,6 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.graalvm.compiler.nodes.memory.ReadNode;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,12 +67,11 @@ public class Gravityhook {
 
     private void createPlayer() {
         player = new Player((int)canvas.getWidth() / 2, (int)canvas.getHeight() - 70);
-        drawables.add(player);
     }
 
     private void createMines() {
         for (int i = 0; i < 5; ++i) {
-            drawables.add(new Mine(new Random().nextInt(380), new Random().nextInt(500)));
+            drawables.add(new Mine(new Random().nextInt(380), canvas.getHeight() / 2 + new Random().nextInt(200)));
         }
     }
 
@@ -79,19 +80,22 @@ public class Gravityhook {
         gc.setFill(Color.GREEN);
         long milis = System.currentTimeMillis();
         Routines r = new Routines();
-        do {
+        mainLoop : do {
             r.sleep(10);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             double diff = (System.currentTimeMillis() - milis) / 10.0;
             if (started)
                 physics.apply(player);
+            player.move(diff).fixCoords(canvas.getWidth(), canvas.getHeight());
+            player.draw(gc);
             for (Drawable d : drawables) {
-                if (! (d instanceof Player) && player.intersects( (GameObject) d ))
-                    break;
                 d.draw(gc);
                 if (d instanceof MovableObject) {
                     ((MovableObject) d).fixCoords(canvas.getWidth(), canvas.getHeight())
                             .move(diff);
+                }
+                if ( d instanceof Mine && ((Mine) d ).intersects(player) ) {
+                    break mainLoop;
                 }
             }
             milis = System.currentTimeMillis();
