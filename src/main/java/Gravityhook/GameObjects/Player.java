@@ -27,26 +27,34 @@ public class Player extends MovableObject {
         return false;
     }
 
+    @Override
+    public double getWidth() {
+        return 20;
+    }
+
+    @Override
+    public double getHeight() {
+        return 30;
+    }
+
     public void setAccOnForce(double force, double angle) {
         this.xAcc += Math.cos(angle) * force * mass;
         this.yAcc += Math.sin(angle) * force * mass;
     }
 
-    private void fixCoords() {
-        if (x >= 360 || x <= 0) {
-            xAcc = 0;
-            x = 380 - 20;
+    public MovableObject fixCoords(double maxWidth, double maxHeight) {
+        if (x + getWidth() > maxWidth || x  < 0) {
+            xAcc /= -2;
         }
-        if (y >= 630 || y <= 0) {
-            yAcc = 0;
-            y = 630;
-        }
+        if (y + getHeight() >= maxHeight)
+            yAcc *= -1;
+        return this;
     }
 
-    public void move(double milis) {
+    public MovableObject move(double milis) {
         x += xAcc * milis;
         y += yAcc * milis;
-        fixCoords();
+        return this;
     }
 
 }

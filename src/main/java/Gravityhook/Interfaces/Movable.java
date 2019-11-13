@@ -1,7 +1,9 @@
 package Gravityhook.Interfaces;
 
 public interface Movable {
-    public void move(double milis);
+    Movable move(double milis);
 
-    public void setAccOnForce(double force, double angle);
+    void setAccOnForce(double force, double angle);
+
+    Movable fixCoords(double maxWidth, double maxHeight);
 }

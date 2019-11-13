@@ -7,6 +7,7 @@ import Gravityhook.GameObjects.Player;
 import Gravityhook.GameObjects.Rope;
 import Gravityhook.Interfaces.Drawable;
 import gherkin.lexer.Pl;
+import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
@@ -28,6 +29,8 @@ public class Gravityhook {
     private ImageCursor cursor;
 
     private Scene scene;
+
+    public GameController game;
 
     private Player player;
 
@@ -56,9 +59,8 @@ public class Gravityhook {
         physics = new Physics();
         this.createMines();
         this.createPlayer();
-
+        this.game = game;
         new Thread(this::redraw).start();
-
     }
 
     private void createPlayer() {
@@ -77,22 +79,24 @@ public class Gravityhook {
         gc.setFill(Color.GREEN);
         long milis = System.currentTimeMillis();
         Routines r = new Routines();
-        while(true) {
+        do {
             r.sleep(10);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             double diff = (System.currentTimeMillis() - milis) / 10.0;
+            if (started)
+                physics.apply(player);
             for (Drawable d : drawables) {
+                if (! (d instanceof Player) && player.intersects( (GameObject) d ))
+                    break;
                 d.draw(gc);
                 if (d instanceof MovableObject) {
-                    if (d instanceof Player && started)
-                        physics.apply((MovableObject) d);
-                    ((MovableObject) d).move(diff);
-
+                    ((MovableObject) d).fixCoords(canvas.getWidth(), canvas.getHeight())
+                            .move(diff);
                 }
             }
             milis = System.currentTimeMillis();
-        }
-
+        } while(player.y + player.getHeight() < canvas.getHeight());
+        Platform.runLater(game::endGame);
     }
 
     public void clicked(double sceneX, double sceneY) {

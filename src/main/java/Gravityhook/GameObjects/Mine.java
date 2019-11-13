@@ -3,13 +3,14 @@ package Gravityhook.GameObjects;
 import Gravityhook.Abstract.GameObject;
 import Gravityhook.Abstract.MovableObject;
 import Gravityhook.Interfaces.Clickable;
+import Gravityhook.Interfaces.Movable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Mine extends MovableObject implements Clickable {
-    public final double mass = 50;
+    public final double mass = 30;
 
     private Image img;
 
@@ -57,6 +58,16 @@ public class Mine extends MovableObject implements Clickable {
     }
 
     @Override
+    public double getWidth() {
+        return this.img.getWidth();
+    }
+
+    @Override
+    public double getHeight() {
+        return this.img.getHeight();
+    }
+
+    @Override
     public boolean isClicked(int x, int y) {
         if ( Math.abs(this.x - x) < this.img.getWidth() && Math.abs(this.y - y) < this.img.getHeight() ) {
             return true;
@@ -65,13 +76,23 @@ public class Mine extends MovableObject implements Clickable {
     }
 
     public void setAccOnForce(double force, double angle) {
-        this.xAcc += Math.cos(angle) * force * mass;
-        this.yAcc += Math.sin(angle) * force * mass;
+        this.xAcc += -(Math.cos(angle) * force * mass) / 2.0;
+        this.yAcc += -Math.sin(angle) * force * mass ;
     }
 
-    public void move(double milis) {
+    @Override
+    public Movable fixCoords(double maxWidth, double maxHeight) {
+        if (this.x >= maxWidth || this.x - (getWidth() / 2) <= 0)
+            this.xAcc = 0;
+        if (this.y >= maxHeight || this.y <= 0)
+            this.yAcc = 0;
+        return this;
+    }
+
+    public MovableObject move(double milis) {
         x += xAcc * milis;
         y += yAcc * milis;
+        return this;
     }
 
 }

@@ -1,8 +1,10 @@
 package Gravityhook;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.lang.management.PlatformLoggingMXBean;
 
 public class GameController {
 
@@ -49,8 +52,15 @@ public class GameController {
         root.getChildren().remove(menuBox);
         root.getChildren().add(canvas);
         game = new Gravityhook(canvas);
-        game.game(this);
         game.setScene(scene);
+        game.game(this);
+    }
+
+    public void endGame() {
+        root.getChildren().remove(canvas);
+        root.getChildren().add(menuBox);
+        game = null;
+        scene.setCursor(Cursor.DEFAULT);
     }
 
     public void mousePressed(MouseEvent mouseEvent) {

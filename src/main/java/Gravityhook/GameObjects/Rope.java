@@ -31,7 +31,7 @@ public class Rope extends GameObject {
         double force = this.calcForce(end1, end2);
         double angle = this.getAngle(end1, end2);
         end1.setAccOnForce(force, angle);
-        end1.setAccOnForce(force, angle);
+        end2.setAccOnForce(force / 4.0, angle);
         gc.setStroke(Color.BLUEVIOLET);
         gc.strokeLine(end1.x, end1.y, end2.x, end2.y);
     }
@@ -54,5 +54,15 @@ public class Rope extends GameObject {
     @Override
     public boolean intersects(GameObject go) {
         return false;
+    }
+
+    @Override
+    public double getWidth() {
+        return Math.abs(this.end1.x - this.end2.x);
+    }
+
+    @Override
+    public double getHeight() {
+        return Math.abs(this.end1.y - this.end2.y);
     }
 }

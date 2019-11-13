@@ -6,4 +6,7 @@ public interface IHitbox {
 
     public boolean intersects(GameObject go);
 
+    double getWidth();
+    double getHeight();
+
 }
