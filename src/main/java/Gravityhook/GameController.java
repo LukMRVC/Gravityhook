@@ -9,12 +9,19 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.lang.management.PlatformLoggingMXBean;
+import java.util.Optional;
 
 public class GameController {
 
@@ -29,10 +36,13 @@ public class GameController {
 
     private Gravityhook game;
 
+    private String playerName;
+
     private Scene scene;
 
     public GameController start() {
         game = null;
+        playerName = "Player";
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
         try {
             loader.load();
@@ -49,6 +59,14 @@ public class GameController {
     }
 
     public void startGame() {
+        Dialog dialog = new TextInputDialog(this.playerName);
+        dialog.setTitle("Set player name");
+        dialog.setHeaderText("Please enter your nickname.");
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            this.playerName = result.get();
+        }
+        menuBox.getChildren().removeIf(Node -> Node instanceof Label);
         root.getChildren().remove(menuBox);
         root.getChildren().add(canvas);
         game = new Gravityhook(canvas);
@@ -56,11 +74,19 @@ public class GameController {
         game.game(this);
     }
 
+    public void scoreboard()
+    {
+        return;
+    }
+
     public void endGame() {
+        scene.setCursor(Cursor.DEFAULT);
+        Button button = new Button("Continue");
         root.getChildren().remove(canvas);
         root.getChildren().add(menuBox);
+        menuBox.getChildren().add(new Label(this.playerName + ", your score is: " + game.score));
+        game.score = 0;
         game = null;
-        scene.setCursor(Cursor.DEFAULT);
     }
 
     public void mousePressed(MouseEvent mouseEvent) {

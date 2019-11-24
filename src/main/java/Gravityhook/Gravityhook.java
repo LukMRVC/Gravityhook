@@ -40,7 +40,10 @@ public class Gravityhook {
 
     private boolean started;
 
+    public int score;
+
     public Gravityhook(Canvas canvas) {
+        this.score = 0;
         this.canvas = canvas;
         this.started = false;
         this.drawables = new ArrayList<>();
@@ -104,6 +107,7 @@ public class Gravityhook {
         Routines r = new Routines();
         double rememberedPlayerMovement;
         double diff;
+        int biggestScore = 0;
         mainLoop : do {
             r.sleep(10);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -111,13 +115,14 @@ public class Gravityhook {
             if (started)
                 physics.apply(player);
             rememberedPlayerMovement = player.yAcc;
+            biggestScore += (player.y - (player.y + player.yAcc * diff));
+            if (score < biggestScore)
+                score = biggestScore;
             moveCanvasEffect(rememberedPlayerMovement);
-            player.move(diff).fixCoords(canvas.getWidth(), canvas.getHeight());
+            player.fixCoords(canvas.getWidth(), canvas.getHeight()).move(diff);
             player.yAcc = rememberedPlayerMovement;
             player.draw(gc);
-            Iterator<Drawable> it = drawables.iterator();
-            while (it.hasNext()) {
-                Drawable d = it.next();
+            for (Drawable d : drawables) {
                 d.draw(gc);
                 if (d instanceof MovableObject) {
                     ((MovableObject) d).fixCoords(canvas.getWidth(), canvas.getHeight())
@@ -127,8 +132,11 @@ public class Gravityhook {
                     break mainLoop;
                 }
             }
-            drawables.removeIf( (d) -> { if (d instanceof GameObject && ((GameObject) d).y >= canvas.getHeight()) return true; return false; } );
+            drawables.removeIf( (d) -> d instanceof GameObject && ((GameObject) d).y >= canvas.getHeight());
             milis = System.currentTimeMillis();
+            gc.setFill(Color.WHITE);
+            gc.fillText("Score: " + score, 0, 10);
+            gc.setFill(Color.GREEN);
         } while(player.y + player.getHeight() < canvas.getHeight());
         Platform.runLater(game::endGame);
     }

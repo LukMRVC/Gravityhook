@@ -18,10 +18,20 @@
             </VBox.margin>
             <children>
                 <Button onAction="#startGame">
+
                     <padding>
                         <Insets top="5" bottom="5" left="5" right="5" />
                     </padding>
                     Start game
+                </Button>
+                <Button onAction="#scoreboard">
+                    <VBox.margin>
+                        <Insets top="5"/>
+                    </VBox.margin>
+                    <padding>
+                        <Insets top="5" bottom="5" left="5" right="5" />
+                    </padding>
+                    Scoreboards
                 </Button>
             </children>
         </VBox>
