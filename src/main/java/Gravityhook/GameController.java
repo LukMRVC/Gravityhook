@@ -1,12 +1,8 @@
 package Gravityhook;
 
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -14,13 +10,12 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.lang.management.PlatformLoggingMXBean;
 import java.util.Optional;
 
 public class GameController {
@@ -40,9 +35,15 @@ public class GameController {
 
     private Scene scene;
 
+    private Scoreboard scoreboard;
+
+    public GameController() {
+        this.scoreboard = new Scoreboard();
+        this.playerName = "Player";
+    }
+
     public GameController start() {
         game = null;
-        playerName = "Player";
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
         try {
             loader.load();
@@ -85,6 +86,11 @@ public class GameController {
         root.getChildren().remove(canvas);
         root.getChildren().add(menuBox);
         menuBox.getChildren().add(new Label(this.playerName + ", your score is: " + game.score));
+        try {
+            scoreboard.writeScore(Integer.toString(game.score), this.playerName);
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+        }
         game.score = 0;
         game = null;
     }
