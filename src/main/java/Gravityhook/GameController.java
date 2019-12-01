@@ -3,6 +3,7 @@ package Gravityhook;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -12,11 +13,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
-import java.util.Optional;
+import javafx.stage.Stage;
 
 public class GameController {
 
@@ -38,8 +35,8 @@ public class GameController {
     private Scoreboard scoreboard;
 
     public GameController() {
-        this.scoreboard = new Scoreboard();
         this.playerName = "Player";
+        this.scoreboard = new Scoreboard();
     }
 
     public GameController start() {
@@ -77,6 +74,16 @@ public class GameController {
 
     public void scoreboard()
     {
+        try {
+            Parent scoreboard = FXMLLoader.load(getClass().getResource("scoreboard.fxml"));
+            Stage s = new Stage();
+            s.setTitle("Scoreboards");
+            s.setScene(new Scene(scoreboard, 450, 450));
+            s.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return;
     }
 
