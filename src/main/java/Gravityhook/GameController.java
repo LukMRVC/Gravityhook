@@ -3,7 +3,6 @@ package Gravityhook;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -13,7 +12,11 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.util.Optional;
 
 public class GameController {
 
@@ -74,17 +77,19 @@ public class GameController {
 
     public void scoreboard()
     {
+        System.out.println(getClass().getResource("scoreboard.fxml"));
+        System.out.println(getClass().getClassLoader().getResource("scoreboard.fxml"));
+        System.out.println(GameController.class.getResource("scoreboard.fxml"));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("scoreboard.fxml"));
         try {
-            Parent scoreboard = FXMLLoader.load(getClass().getResource("scoreboard.fxml"));
-            Stage s = new Stage();
-            s.setTitle("Scoreboards");
-            s.setScene(new Scene(scoreboard, 450, 450));
-            s.show();
+            loader.load();
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
-        return;
+        ScoreboardController sc = loader.getController();
     }
 
     public void endGame() {
@@ -94,7 +99,8 @@ public class GameController {
         root.getChildren().add(menuBox);
         menuBox.getChildren().add(new Label(this.playerName + ", your score is: " + game.score));
         try {
-            scoreboard.writeScore(Integer.toString(game.score), this.playerName);
+            Scoreboard.ScoreboardRow row = new Scoreboard.ScoreboardRow(game.score, this.playerName);
+            scoreboard.writeScore(row);
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }

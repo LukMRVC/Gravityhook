@@ -18,12 +18,48 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Scoreboard {
 
+    public static class ScoreboardRow {
+
+        public long date;
+        public int score;
+        public String nickname;
+
+        ScoreboardRow(int score, String nick) {
+            this(score, nick, java.time.Instant.now().getEpochSecond());
+        }
+
+        ScoreboardRow(int score, String nick, long date) {
+            this.date = date;
+            this.score = score;
+            this.nickname = nick;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public String getDate() {
+            java.time.LocalDateTime dateTime = java.time.LocalDateTime.ofEpochSecond(date, 0, ZoneOffset.UTC);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d. MMMM yyyy", Locale.getDefault());
+            return dateTime.format(formatter);
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+    }
+
     public final String filepath = "scoreboards.xml";
 
-    public void writeScore(String score, String player) throws ParserConfigurationException, TransformerException {
+    public void writeScore(ScoreboardRow row) throws ParserConfigurationException, TransformerException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = null;
@@ -42,11 +78,11 @@ public class Scoreboard {
         Node scores = root.getFirstChild();
         Element eScore = doc.createElement("Score");
         Element ePlayer = doc.createElement("Player");
-        ePlayer.setTextContent(player);
+        ePlayer.setTextContent(row.nickname);
         Element value = doc.createElement("Value");
-        value.setTextContent(score);
-        Element date = doc.createElement("Datetime");
-        date.setTextContent(Long.toString(System.currentTimeMillis() / 1000L));
+        value.setTextContent(Integer.toString(row.score));
+        Element date = doc.createElement("Date");
+        date.setTextContent(Long.toString(row.date));
         eScore.appendChild(ePlayer);
         eScore.appendChild(value);
         eScore.appendChild(date);
@@ -60,7 +96,7 @@ public class Scoreboard {
         transformer.transform(xml, result);
     }
 
-    public NodeList readScores() throws ParserConfigurationException, FileNotFoundException {
+    public List<ScoreboardRow> readScores() throws ParserConfigurationException, FileNotFoundException {
         InputStream fis = new FileInputStream(filepath);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         NodeList scores = null;
@@ -73,7 +109,16 @@ public class Scoreboard {
         } catch (SAXException | IOException e) {
             e.printStackTrace();
         }
-        return scores;
+        ArrayList<ScoreboardRow> scoresList = new ArrayList<>();
+        for (int i = 0; i < scores.getLength(); ++i) {
+            Node item = scores.item(i);
+            String nick = item.getChildNodes().item(0).getTextContent();
+            String score = item.getChildNodes().item(1).getTextContent();
+            String date = item.getChildNodes().item(2).getTextContent();
+            scoresList.add(new ScoreboardRow(Integer.parseInt(score), nick, Long.parseLong(date)));
+        }
+
+        return scoresList;
 
     }
 }

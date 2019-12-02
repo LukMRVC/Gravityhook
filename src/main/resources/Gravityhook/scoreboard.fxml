@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">.
+            fx:id="rootPane"
+            fx:controller="Gravityhook.ScoreboardController"
+            prefHeight="400.0" prefWidth="600.0">
     <center>
         <TableView fx:id="table">
             <columns>
-                <TableColumn text="Nickname">
+                <TableColumn fx:id="nickname" text="Nickname">
                 </TableColumn>
-                <TableColumn text="Date">
+                <TableColumn fx:id="score" text="Score">
                 </TableColumn>
-                <TableColumn text="Score">
+                <TableColumn fx:id="date" text="Date">
                 </TableColumn>
+
             </columns>
         </TableView>
     </center>
