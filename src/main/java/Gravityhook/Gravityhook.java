@@ -1,13 +1,11 @@
 package Gravityhook;
 
-import Gravityhook.Abstract.GameObject;
 import Gravityhook.Abstract.MovableObject;
 import Gravityhook.GameObjects.Mine;
+import Gravityhook.GameObjects.Obstacle;
 import Gravityhook.GameObjects.Player;
 import Gravityhook.GameObjects.Rope;
 import Gravityhook.Interfaces.Drawable;
-import Gravityhook.Interfaces.IHitbox;
-import gherkin.lexer.Pl;
 import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -16,7 +14,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import org.graalvm.compiler.nodes.memory.ReadNode;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,6 +62,7 @@ public class Gravityhook {
         this.createMines(10);
         this.createPlayer();
         this.game = game;
+        this.drawables.add(new Obstacle(50, 250));
         new Thread(this::redraw).start();
     }
 
@@ -91,12 +89,21 @@ public class Gravityhook {
         return m;
     }
 
+    private Drawable createGameObject() {
+        if (new Random().nextInt(100) > 80) {
+            return new Obstacle(new Random().nextInt((int) canvas.getWidth() - 20), -250 + new Random().nextInt(230));
+        }
+        return createMine();
+    }
+
     private void moveCanvasEffect(double rememberedPlayerMovement) {
         if (player.y <= 300 && player.yAcc < 0) {
             player.yAcc = 0;
-            if (drawables.size() < 15)
-                drawables.add(createMine());
-            drawables.forEach( (d) ->  { if (d instanceof Mine) ((Mine)d).yAcc = -rememberedPlayerMovement; }  );
+            if (drawables.size() < 17)
+                drawables.add(createGameObject());
+            drawables.forEach((d) -> {
+                if (d instanceof MovableObject) ((MovableObject) d).yAcc = -rememberedPlayerMovement;
+            });
         }
     }
 
@@ -131,9 +138,19 @@ public class Gravityhook {
                 if ( d instanceof Mine && ((Mine) d ).intersects(player) ) {
                     break mainLoop;
                 }
+                if (d instanceof Obstacle && ((Obstacle) d).intersects(player)) {
+                    player.yAcc = 0;
+                    for (Drawable mo : drawables) {
+                        if (mo instanceof MovableObject) {
+                            ((MovableObject) mo).yAcc = 0;
+                            ((MovableObject) mo).yAcc = 0;
+                        }
+                    }
+                }
             }
-            drawables.removeIf( (d) -> d instanceof GameObject && ((GameObject) d).y >= canvas.getHeight());
+            drawables.removeIf((d) -> d instanceof MovableObject && ((MovableObject) d).y >= canvas.getHeight());
             milis = System.currentTimeMillis();
+
             gc.setFill(Color.WHITE);
             gc.fillText("Score: " + score, 0, 10);
             gc.setFill(Color.GREEN);

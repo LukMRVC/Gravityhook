@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="Gravityhook.GameController"
             fx:id="root"
             prefHeight="700.0" minHeight="700" prefWidth="400.0">
+    <top>
+        <MenuBar>
+            <Menu fx:id="menuAbout" text="About">
+                <items>
+                    <MenuItem onAction="#aboutItemAction" fx:id="itemAbout" text="About"/>
+                </items>
+            </Menu>
+        </MenuBar>
+    </top>
     <center>
         <Canvas fx:id="canvas" height="700" width="400" BorderPane.alignment="CENTER"
                 onMousePressed="#mousePressed" onMouseMoved="#mouseMove" onMouseReleased="#mouseReleased" />
@@ -17,8 +26,11 @@
                 <Insets top="50" bottom="50" />
             </VBox.margin>
             <children>
+                <Label>Enter your nick:</Label>
+                <TextField fx:id="playerName" prefColumnCount="2" maxWidth="150">
+                    Player
+                </TextField>
                 <Button onAction="#startGame">
-
                     <padding>
                         <Insets top="5" bottom="5" left="5" right="5" />
                     </padding>

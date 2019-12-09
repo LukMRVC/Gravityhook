@@ -1,14 +1,12 @@
 package Gravityhook;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -16,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.Optional;
 
 public class GameController {
 
@@ -31,14 +28,16 @@ public class GameController {
 
     private Gravityhook game;
 
-    private String playerName;
+    @FXML
+    private TextField playerName;
+
+    private String playerStr;
 
     private Scene scene;
 
     private Scoreboard scoreboard;
 
     public GameController() {
-        this.playerName = "Player";
         this.scoreboard = new Scoreboard();
     }
 
@@ -60,12 +59,13 @@ public class GameController {
     }
 
     public void startGame() {
-        Dialog dialog = new TextInputDialog(this.playerName);
-        dialog.setTitle("Set player name");
-        dialog.setHeaderText("Please enter your nickname.");
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            this.playerName = result.get();
+
+        this.playerStr = playerName.getText();
+        if (playerStr.length() < 3) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Player name must be at least 3 characters long.", ButtonType.OK);
+            a.setTitle("Invalid player name");
+            a.show();
+            return;
         }
         menuBox.getChildren().removeIf(Node -> Node instanceof Label);
         root.getChildren().remove(menuBox);
@@ -97,9 +97,9 @@ public class GameController {
         Button button = new Button("Continue");
         root.getChildren().remove(canvas);
         root.getChildren().add(menuBox);
-        menuBox.getChildren().add(new Label(this.playerName + ", your score is: " + game.score));
+        menuBox.getChildren().add(new Label(this.playerStr + ", your score is: " + game.score));
         try {
-            Scoreboard.ScoreboardRow row = new Scoreboard.ScoreboardRow(game.score, this.playerName);
+            Scoreboard.ScoreboardRow row = new Scoreboard.ScoreboardRow(game.score, this.playerStr);
             scoreboard.writeScore(row);
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
@@ -128,5 +128,11 @@ public class GameController {
 
     public void setScene(Scene s) {
         this.scene = s;
+    }
+
+    public void aboutItemAction(ActionEvent actionEvent) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Created by Lukas Moravec MOR0179.", ButtonType.OK);
+        a.setTitle("Author");
+        a.show();
     }
 }
