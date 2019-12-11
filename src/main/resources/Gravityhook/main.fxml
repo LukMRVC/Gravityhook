@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -29,6 +29,9 @@
                 <Label>Enter your nick:</Label>
                 <TextField fx:id="playerName" prefColumnCount="2" maxWidth="150">
                     Player
+                    <VBox.margin>
+                        <Insets bottom="10" top="5"/>
+                    </VBox.margin>
                 </TextField>
                 <Button onAction="#startGame">
                     <padding>

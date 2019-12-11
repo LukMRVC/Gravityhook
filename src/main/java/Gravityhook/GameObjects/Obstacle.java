@@ -35,16 +35,15 @@ public class Obstacle extends MovableObject {
         return 10;
     }
 
+    public static int getWidthStatic() {
+        return 10;
+    }
+
     @Override
     public Movable move(double milis) {
         x += xAcc * milis;
         y += yAcc * milis;
         return this;
-    }
-
-    @Override
-    public void setAccOnForce(double force, double angle) {
-        return;
     }
 
     @Override

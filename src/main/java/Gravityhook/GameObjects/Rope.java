@@ -2,6 +2,7 @@ package Gravityhook.GameObjects;
 
 import Gravityhook.Abstract.GameObject;
 import Gravityhook.Abstract.MovableObject;
+import Gravityhook.Interfaces.Connectable;
 import Gravityhook.Interfaces.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -22,13 +23,16 @@ public class Rope implements Drawable {
     @Override
     public void draw(GraphicsContext gc) {
         double force = this.calcForce(end1, end2);
-        end1.setAccOnForce(force, getAngle(end1, end2));
-        end2.setAccOnForce(force, getAngle(end2, end1));
+        ((Connectable) end1).setAccOnForce(force, getAngle(end1, end2));
+        ((Connectable) end2).setAccOnForce(force, getAngle(end2, end1));
         gc.setStroke(Color.BLUEVIOLET);
         gc.strokeLine(end1.x, end1.y, end2.x, end2.y);
     }
 
     public double calcForce(MovableObject mo1, MovableObject mo2) {
+        if (mo2 instanceof Graviton) {
+            return 0.0111 * G * mo2.getMass();
+        }
         return G * (mo1.getMass() * mo2.getMass()) / ((calcDistance(mo1, mo2) * (calcDistance(mo1, mo2))) );
     }
 

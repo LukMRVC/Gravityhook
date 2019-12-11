@@ -1,10 +1,9 @@
 package Gravityhook;
 
 import Gravityhook.Abstract.MovableObject;
-import Gravityhook.GameObjects.Mine;
-import Gravityhook.GameObjects.Obstacle;
-import Gravityhook.GameObjects.Player;
-import Gravityhook.GameObjects.Rope;
+import Gravityhook.GameObjects.*;
+import Gravityhook.Interfaces.Clickable;
+import Gravityhook.Interfaces.Connectable;
 import Gravityhook.Interfaces.Drawable;
 import javafx.application.Platform;
 import javafx.scene.Cursor;
@@ -62,7 +61,8 @@ public class Gravityhook {
         this.createMines(10);
         this.createPlayer();
         this.game = game;
-        this.drawables.add(new Obstacle(50, 250));
+//        this.drawables.add(new Obstacle(50, 250));
+//        this.drawables.add(new Graviton(150, 250));
         new Thread(this::redraw).start();
     }
 
@@ -90,9 +90,10 @@ public class Gravityhook {
     }
 
     private Drawable createGameObject() {
-        if (new Random().nextInt(100) > 80) {
-            return new Obstacle(new Random().nextInt((int) canvas.getWidth() - 20), -250 + new Random().nextInt(230));
-        }
+        if (new Random().nextInt(100) > 85) {
+            return new Obstacle(new Random().nextInt((int) canvas.getWidth() - Obstacle.getWidthStatic()), -250 + new Random().nextInt(230));
+        } else if (new Random().nextInt(100) > 95)
+            return new Graviton(new Random().nextInt((int) canvas.getWidth() - Obstacle.getWidthStatic()), -250 + new Random().nextInt(230));
         return createMine();
     }
 
@@ -162,11 +163,11 @@ public class Gravityhook {
         Iterator<Drawable> it = drawables.iterator();
         while (it.hasNext()) {
             Drawable d = it.next();
-            if (d instanceof Mine) {
-                if (((Mine) d).isClicked((int)sceneX, (int)sceneY)) {
-                    ((Mine) d).setActive(true);
+            if (d instanceof Connectable) {
+                if (((Clickable) d).isClicked((int) sceneX, (int) sceneY)) {
+                    ((Clickable) d).setActive(true);
                     started = true;
-                    drawables.add(new Rope(player, (Mine) d));
+                    drawables.add(new Rope(player, (MovableObject) d));
                     break;
                 }
             }
@@ -177,9 +178,9 @@ public class Gravityhook {
         Iterator<Drawable> it = drawables.iterator();
         while (it.hasNext()) {
             Drawable d = it.next();
-            if (d instanceof Mine) {
-                if (((Mine) d).isActive()) {
-                    ((Mine) d).setActive(false);
+            if (d instanceof Clickable) {
+                if (((Clickable) d).isActive()) {
+                    ((Clickable) d).setActive(false);
                 }
             }
             if (d instanceof Rope) {
@@ -193,8 +194,8 @@ public class Gravityhook {
         boolean isOn = false;
         while (it.hasNext()) {
             Drawable d = it.next();
-            if (d instanceof Mine) {
-                if (((Mine) d).isClicked((int) sceneX, (int) sceneY)) {
+            if (d instanceof Clickable) {
+                if (((Clickable) d).isClicked((int) sceneX, (int) sceneY)) {
                     isOn = true;
                     scene.setCursor(this.cursor);
                     break;

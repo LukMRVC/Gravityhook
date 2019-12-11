@@ -3,11 +3,12 @@ package Gravityhook.GameObjects;
 import Gravityhook.Abstract.GameObject;
 import Gravityhook.Abstract.MovableObject;
 import Gravityhook.Interfaces.Clickable;
+import Gravityhook.Interfaces.Connectable;
 import Gravityhook.Interfaces.Movable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Mine extends MovableObject implements Clickable {
+public class Mine extends MovableObject implements Clickable, Connectable {
     public final double mass = 30;
 
     private Image img;
@@ -38,10 +39,13 @@ public class Mine extends MovableObject implements Clickable {
             gc.drawImage(this.img,  x - (img.getWidth() / 2), y - (img.getHeight() / 2));
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }
 
+
+    @Override
     public void setActive(boolean active) {
         this.active = active;
         if (active == false) {

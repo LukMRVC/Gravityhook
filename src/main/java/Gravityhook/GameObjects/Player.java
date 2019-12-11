@@ -2,11 +2,12 @@ package Gravityhook.GameObjects;
 
 import Gravityhook.Abstract.GameObject;
 import Gravityhook.Abstract.MovableObject;
+import Gravityhook.Interfaces.Connectable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class Player extends MovableObject {
+public class Player extends MovableObject implements Connectable {
 
     public final double mass = 110;
 
@@ -39,10 +40,12 @@ public class Player extends MovableObject {
         return 30;
     }
 
+    @Override
     public void setAccOnForce(double force, double angle) {
-         this.xAcc += Math.cos(angle) * force * mass;
+        this.xAcc += Math.cos(angle) * force * mass;
         this.yAcc += Math.sin(angle) * force * mass;
     }
+
 
     public MovableObject fixCoords(double maxWidth, double maxHeight) {
         if (x + getWidth() > maxWidth || x < 0) {
