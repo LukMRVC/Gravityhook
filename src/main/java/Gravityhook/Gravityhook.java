@@ -1,10 +1,16 @@
 package Gravityhook;
 
 import Gravityhook.Abstract.MovableObject;
-import Gravityhook.GameObjects.*;
+import Gravityhook.GameObjects.Mine;
+import Gravityhook.GameObjects.Obstacle;
+import Gravityhook.GameObjects.Player;
+import Gravityhook.GameObjects.Rope;
 import Gravityhook.Interfaces.Clickable;
 import Gravityhook.Interfaces.Connectable;
 import Gravityhook.Interfaces.Drawable;
+import Gravityhook.Utils.GameObjectFactory;
+import Gravityhook.Utils.Physics;
+import Gravityhook.Utils.Routines;
 import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -16,7 +22,6 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
 public class Gravityhook {
 
@@ -36,12 +41,15 @@ public class Gravityhook {
 
     private boolean started;
 
+    private GameObjectFactory factory;
+
     public int score;
 
     public Gravityhook(Canvas canvas) {
         this.score = 0;
         this.canvas = canvas;
         this.started = false;
+        this.factory = new GameObjectFactory();
         this.drawables = new ArrayList<>();
         try {
             this.cursor = new ImageCursor(new Image(getClass().getClassLoader().getResourceAsStream("img/cursor.png")));
@@ -58,11 +66,11 @@ public class Gravityhook {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         physics = new Physics();
-        this.createMines(10);
+        drawables.addAll(factory.createObjects(Mine.class, 10, canvas.getWidth(),
+                canvas.getHeight() - canvas.getHeight() / 2, 0, canvas.getHeight() / 2 - 200));
+
         this.createPlayer();
         this.game = game;
-//        this.drawables.add(new Obstacle(50, 250));
-//        this.drawables.add(new Graviton(150, 250));
         new Thread(this::redraw).start();
     }
 
@@ -70,38 +78,12 @@ public class Gravityhook {
         player = new Player((int)canvas.getWidth() / 2, (int)canvas.getHeight() - 70);
     }
 
-    private void createMines(int count) {
-        for (int i = 0; i < count / 2; ++i) {
-            drawables.add(this.createMine(new Random().nextInt(380), (int) (canvas.getHeight() / 2 + new Random().nextInt(200))));
-        }
-        for (int i = 0; i < count / 2 + 1; ++i) {
-            drawables.add(this.createMine(new Random().nextInt(380), 20 + new Random().nextInt((int) canvas.getHeight() / 2) ));
-        }
-    }
-
-    private Mine createMine() {
-        Mine m = new Mine(new Random().nextInt((int)canvas.getWidth() - 20), -250 + new Random().nextInt(230));
-        return m;
-    }
-
-    private Mine createMine(int x, int y) {
-        Mine m = new Mine(x, y);
-        return m;
-    }
-
-    private Drawable createGameObject() {
-        if (new Random().nextInt(100) > 85) {
-            return new Obstacle(new Random().nextInt((int) canvas.getWidth() - Obstacle.getWidthStatic()), -250 + new Random().nextInt(230));
-        } else if (new Random().nextInt(100) > 95)
-            return new Graviton(new Random().nextInt((int) canvas.getWidth() - Obstacle.getWidthStatic()), -250 + new Random().nextInt(230));
-        return createMine();
-    }
 
     private void moveCanvasEffect(double rememberedPlayerMovement) {
         if (player.y <= 300 && player.yAcc < 0) {
             player.yAcc = 0;
             if (drawables.size() < 17)
-                drawables.add(createGameObject());
+                drawables.add(factory.createRandomObject(canvas.getWidth(), 250, 0, -250));
             drawables.forEach((d) -> {
                 if (d instanceof MovableObject) ((MovableObject) d).yAcc = -rememberedPlayerMovement;
             });

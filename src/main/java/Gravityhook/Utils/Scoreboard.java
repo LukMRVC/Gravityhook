@@ -1,4 +1,4 @@
-package Gravityhook;
+package Gravityhook.Utils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,11 +32,11 @@ public class Scoreboard {
         public int score;
         public String nickname;
 
-        ScoreboardRow(int score, String nick) {
+        public ScoreboardRow(int score, String nick) {
             this(score, nick, java.time.Instant.now().getEpochSecond());
         }
 
-        ScoreboardRow(int score, String nick, long date) {
+        public ScoreboardRow(int score, String nick, long date) {
             this.date = date;
             this.score = score;
             this.nickname = nick;

@@ -17,6 +17,11 @@ public class Mine extends MovableObject implements Clickable, Connectable {
 
     private boolean active;
 
+    public Mine() {
+        super(0, 0);
+        active = false;
+    }
+
     public Mine(double x, double y) {
         super(x, y);
         active = false;

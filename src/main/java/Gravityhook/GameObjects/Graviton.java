@@ -14,6 +14,10 @@ public class Graviton extends MovableObject implements Connectable, Clickable {
 
     private boolean active = false;
 
+    public Graviton() {
+        super(0, 0);
+    }
+
     public Graviton(double x, double y) {
         super(x, y);
     }
@@ -80,4 +84,5 @@ public class Graviton extends MovableObject implements Connectable, Clickable {
         }
         return false;
     }
+
 }

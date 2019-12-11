@@ -1,4 +1,4 @@
-package Gravityhook;
+package Gravityhook.Utils;
 
 import Gravityhook.Abstract.MovableObject;
 

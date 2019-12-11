@@ -1,4 +1,4 @@
-package Gravityhook;
+package Gravityhook.Utils;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;

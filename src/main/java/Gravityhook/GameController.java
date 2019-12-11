@@ -1,5 +1,7 @@
 package Gravityhook;
 
+import Gravityhook.Utils.Scoreboard;
+import Gravityhook.Utils.ScoreboardController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
