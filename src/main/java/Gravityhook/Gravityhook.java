@@ -66,7 +66,7 @@ public class Gravityhook {
         gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         physics = new Physics();
-        drawables.addAll(factory.createObjects(Mine.class, 10, canvas.getWidth(),
+        drawables.addAll(factory.createObjects(Mine.class, (int) game.getStage().getWidth() / 40, canvas.getWidth(),
                 canvas.getHeight() - canvas.getHeight() / 2, 0, canvas.getHeight() / 2 - 200));
 
         this.createPlayer();
@@ -82,7 +82,7 @@ public class Gravityhook {
     private void moveCanvasEffect(double rememberedPlayerMovement) {
         if (player.y <= 300 && player.yAcc < 0) {
             player.yAcc = 0;
-            if (drawables.size() < 17)
+            if (drawables.size() < ((int) game.getStage().getWidth() / 40 + 10)) ;
                 drawables.add(factory.createRandomObject(canvas.getWidth(), 250, 0, -250));
             drawables.forEach((d) -> {
                 if (d instanceof MovableObject) ((MovableObject) d).yAcc = -rememberedPlayerMovement;

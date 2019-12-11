@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -23,10 +24,12 @@ public class GameController {
     BorderPane root;
 
     @FXML
-    Canvas canvas;
+    public Canvas canvas;
 
     @FXML
     VBox menuBox;
+
+    Stage stage;
 
     private Gravityhook game;
 
@@ -39,8 +42,11 @@ public class GameController {
 
     private Scoreboard scoreboard;
 
+    private MenuControl menuControl;
+
     public GameController() {
         this.scoreboard = new Scoreboard();
+        this.menuControl = new MenuControl(this);
     }
 
     public GameController start() {
@@ -58,6 +64,14 @@ public class GameController {
 
     public Scene createScene(int x, int y) {
         return new Scene(root, x, y);
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return this.stage;
     }
 
     public void startGame() {
@@ -110,6 +124,10 @@ public class GameController {
         game = null;
     }
 
+    public void resize() {
+
+    }
+
     public void mousePressed(MouseEvent mouseEvent) {
         if (game != null) {
             game.clicked(mouseEvent.getSceneX(), mouseEvent.getSceneY());
@@ -133,8 +151,14 @@ public class GameController {
     }
 
     public void aboutItemAction(ActionEvent actionEvent) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Created by Lukas Moravec MOR0179.", ButtonType.OK);
-        a.setTitle("Author");
-        a.show();
+        menuControl.showAbout();
+    }
+
+    public void delegateSizeAction1(ActionEvent actionEvent) {
+        menuControl.size1();
+    }
+
+    public void delegateSizeAction2(ActionEvent actionEvent) {
+        menuControl.size2();
     }
 }

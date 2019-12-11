@@ -19,6 +19,7 @@ public class Main extends Application {
         controller = controller.start();
         Scene s = controller.createScene(HEIGHT, WIDTH);
         controller.setScene(s);
+        controller.setStage(primaryStage);
         primaryStage.setTitle("Gravityhook");
         primaryStage.setHeight(HEIGHT);
         primaryStage.setWidth(WIDTH);

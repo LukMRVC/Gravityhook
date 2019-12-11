@@ -16,6 +16,16 @@
                     <MenuItem onAction="#aboutItemAction" fx:id="itemAbout" text="About"/>
                 </items>
             </Menu>
+            <Menu fx:id="menuSettings" text="Settings">
+                <items>
+                    <Menu text="Window size">
+                        <items>
+                            <MenuItem onAction="#delegateSizeAction1" text="400x700"/>
+                            <MenuItem onAction="#delegateSizeAction2" text="800x700"/>
+                        </items>
+                    </Menu>
+                </items>
+            </Menu>
         </MenuBar>
     </top>
     <center>
