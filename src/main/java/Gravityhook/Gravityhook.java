@@ -82,7 +82,7 @@ public class Gravityhook {
     private void moveCanvasEffect(double rememberedPlayerMovement) {
         if (player.y <= 300 && player.yAcc < 0) {
             player.yAcc = 0;
-            if (drawables.size() < ((int) game.getStage().getWidth() / 40 + 10)) ;
+            if (drawables.size() < ((int) canvas.getHeight() / 40))
                 drawables.add(factory.createRandomObject(canvas.getWidth(), 250, 0, -250));
             drawables.forEach((d) -> {
                 if (d instanceof MovableObject) ((MovableObject) d).yAcc = -rememberedPlayerMovement;
